@@ -14,10 +14,20 @@ check_package() {
     dpkg -l ${1} &>/dev/null && echo "${1} found" || ! echo -e "     ${1} not installed.\nInstalling ${1} requires root privileges" || sudo apt install -y ${1}
 }
 
+install_ansible() {
+    sudo apt-get -y update
+    sudo apt-get -y install software-properties-common
+    sudo apt-add-repository -y ppa:ansible/ansible
+    sudo apt-get -y update
+    sudo apt-get -y install ansible
+}
+
 echo "=== Check required packages ==="
 check_package git
 check_package python-minimal
+dpgk -l ansible &>/dev/null || install_ansible
 echo
+
 
 echo "=== Update roles ==="
 update_role xenial-java ansible-java-role
