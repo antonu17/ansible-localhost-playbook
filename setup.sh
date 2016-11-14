@@ -4,8 +4,7 @@ GIT_PREFIX_URL="https://github.com/antonu17"
 DIR=$(dirname $0)
 ROLES_DIR="${DIR}/roles"
 
-update_role() 
-{
+update_role() {
   echo "Update role ${1}"
   test -d ${ROLES_DIR}/${1} && git pull || git clone ${GIT_PREFIX_URL}/${2}.git ${ROLES_DIR}/${1}
 }
