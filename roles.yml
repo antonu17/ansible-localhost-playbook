@@ -1,0 +1,14 @@
+---
+roles:
+  - name: java
+    url: https://github.com/antonu17/ansible-java-role.git
+  - name: juju
+    url: https://github.com/antonu17/ansible-juju-role.git
+  - name: openstack-clients
+    url: https://github.com/antonu17/ansible-openstack-clients.git
+  - name: virtualization
+    url: https://github.com/antonu17/ansible-virtualization-role.git
+  - name: virtualbox
+    url: https://github.com/antonu17/ansible-virtualbox-role.git
+  - name: docker
+    url: https://github.com/antonu17/ansible-docker-role.git

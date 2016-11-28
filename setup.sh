@@ -1,12 +1,12 @@
 #!/bin/bash
 
-GIT_PREFIX_URL="https://github.com/antonu17"
 DIR=$(dirname $0)
 ROLES_DIR="${DIR}/roles"
+PLAYBOOK_FILE="localhost.yml"
 
 update_role() {
   echo "Update role ${1}"
-  test -d ${ROLES_DIR}/${1} && pushd .; cd ${ROLES_DIR}/${1}; git pull; popd || git clone ${GIT_PREFIX_URL}/${2}.git ${ROLES_DIR}/${1}
+  test -d ${ROLES_DIR}/${1} && pushd . &>/dev/null && cd ${ROLES_DIR}/${1} && git pull && popd &>/dev/null || git clone ${2} ${ROLES_DIR}/${1}
 }
 
 check_package() {
@@ -24,17 +24,27 @@ install_ansible() {
 echo "=== Check required packages ==="
 check_package git
 check_package python-minimal
-dpgk -l ansible &>/dev/null || install_ansible
+dpkg -l ansible &>/dev/null || install_ansible
 echo
 
+ROLES=$(python parser.py)
 
 echo "=== Update roles ==="
-update_role xenial-java ansible-java-role
-update_role xenial-openstack-clients ansible-openstack-clients
-update_role xenial-docker ansible-docker-role
-update_role xenial-virtualbox ansible-virtualbox-role
-update_role xenial-virtualization ansible-virtualization-role
+while read name url; do
+    update_role ${name} ${url}
+done <<<"${ROLES}"
+echo
+
+echo "=== Generate playbook ==="
+cat <<EOT >${PLAYBOOK_FILE}
+---
+- hosts: localhost
+  roles:
+EOT
+while read name url; do
+    echo "    - ${name}" >>${PLAYBOOK_FILE}
+done <<<"${ROLES}"
 echo
 
 echo "=== Run playbook ==="
-ansible-playbook localhost.yml
+ansible-playbook ${PLAYBOOK_FILE}
