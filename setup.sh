@@ -6,7 +6,7 @@ ROLES_DIR="${DIR}/roles"
 
 update_role() {
   echo "Update role ${1}"
-  test -d ${ROLES_DIR}/${1} && git pull || git clone ${GIT_PREFIX_URL}/${2}.git ${ROLES_DIR}/${1}
+  test -d ${ROLES_DIR}/${1} && pushd .; cd ${ROLES_DIR}/${1}; git pull; popd || git clone ${GIT_PREFIX_URL}/${2}.git ${ROLES_DIR}/${1}
 }
 
 check_package() {
